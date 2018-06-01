@@ -27,3 +27,10 @@ Freeman A. (2017) Pro ASP.NET Core MVC 2. Apress, Berkeley, CA
   * Configure the services. Add the db context. Add the Identity service.
   * Add an instruction to the app Configure method in order to use authentication.
 * Create the database by running `add-migration Initial` and then `update-database` in the Package Manager Console.
+
+
+&nbsp;
+### Use ASP.NET Core Identity
+
+* Enumerate User Accounts. Add the AdminController. The Index action method enumerates the users managed by the Identity system. Access to the user data is through the `UserManager<AppUser>` object that is received by the controller constructor and provided through dependency injection. The Users property returns an enumeration of user objects—instances of the AppUser class in this application—which can be queried and manipulated using LINQ.
+* Created the Views/Admin folder and add a file called Index.cshtml 
