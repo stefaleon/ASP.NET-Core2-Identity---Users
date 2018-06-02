@@ -32,5 +32,17 @@ Freeman A. (2017) Pro ASP.NET Core MVC 2. Apress, Berkeley, CA
 &nbsp;
 ### Use ASP.NET Core Identity
 
-* Enumerate User Accounts. Add the AdminController. The Index action method enumerates the users managed by the Identity system. Access to the user data is through the `UserManager<AppUser>` object that is received by the controller constructor and provided through dependency injection. The Users property returns an enumeration of user objects—instances of the AppUser class in this application—which can be queried and manipulated using LINQ.
-* Created the Views/Admin folder and add a file called Index.cshtml 
+* Enumerate User Accounts.
+  * Add the AdminController. 
+  * The Index action method enumerates the users managed by the Identity system. Access to the user data is through the `UserManager<AppUser>` object that is received by the controller constructor and provided through dependency injection. 
+  * The Users property returns an enumeration of user objects—instances of the AppUser class.
+* Create the Views/Admin folder and add a file called Index.cshtml. 
+* Create Users. 
+  * Add the UserViewModels model.
+  * Create the CreateModel class which defines the basic properties required to create a user account.
+  * Add a pair of Create action methods to the Admin controller. Use the standard controller pattern to present a view to the user for a GET request and process form data for a POST request.
+  * The POST Create action method accepts a CreateModel argument and will be invoked when the administrator submits the form data. Check that the data contains the required values with the ModelState.IsValid property. If it does, a new instance of the AppUser class is created and passed to the asynchronous UserManager.CreateAsync method.
+  * The result from the CreateAsync method is an IdentityResult object. The IdentityResult class defines the Succeeded and Errors properties.  
+  * If the Succeeded property is true, then the client is redirected to the Index action so that list of users is displayed.
+  * If the Succeeded property is false, then the sequence of IdentityError objects provided by the Errors property is enumerated, with the Description property used to create a model-level validation error using the ModelState.AddModelError method.
+* Create a view file called Create.cshtml in the Views/Admin folder. 
