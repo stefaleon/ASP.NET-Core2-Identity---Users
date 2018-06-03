@@ -62,3 +62,18 @@ Freeman A. (2017) Pro ASP.NET Core MVC 2. Apress, Berkeley, CA
   * In the Infrastructure folder add the CustomUserValidator class. This validator checks the domain of the e-mail address to make sure that it is part of the example.com domain.
   * Register the custom user validator in the Startup.cs file. 
   * The process for combining the built-in validation, which is provided by the UserValidator<T> class, with custom validation follows the same pattern as for validating passwords.
+
+
+&nbsp;
+### Complete the Administration Features
+
+* Make changes to the Views/Admin/Index.cshtml file to target the Edit and Delete actions in the Admin controller. 
+  * The Delete button posts a form to the Delete action on the Admin controller. 
+  * The Edit button is an anchor element that will send a GET request because the first step in the edit process is to display the current data.
+  * Add a model validation summary to the view.
+* Implement the Delete Feature.
+  * The UserManager<T> class defines a DeleteAsync method that takes an instance of the user class and removes it from the database. Use the DeleteAsync method to implement the delete feature of the Admin controller.
+  * The Delete method receives the unique ID for the user as an argument.
+  * Use the FindByIdAsync method to locate the corresponding user object and pass it to DeleteAsync method.
+  * The result of the DeleteAsync method is an IdentityResult. Use it to ensure that any errors are displayed to the user.
+  
