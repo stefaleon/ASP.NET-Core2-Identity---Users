@@ -32,7 +32,7 @@ namespace Users
 
             services.AddIdentity<AppUser, IdentityRole>(opts => {
                 opts.User.RequireUniqueEmail = true;
-                opts.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyz";
+                //opts.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyz";
                 opts.Password.RequiredLength = 4;
                 opts.Password.RequireNonAlphanumeric = false;
                 opts.Password.RequireLowercase = false;
