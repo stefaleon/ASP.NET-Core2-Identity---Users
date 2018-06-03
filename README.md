@@ -45,4 +45,12 @@ Freeman A. (2017) Pro ASP.NET Core MVC 2. Apress, Berkeley, CA
   * The result from the CreateAsync method is an IdentityResult object. The IdentityResult class defines the Succeeded and Errors properties.  
   * If the Succeeded property is true, then the client is redirected to the Index action so that list of users is displayed.
   * If the Succeeded property is false, then the sequence of IdentityError objects provided by the Errors property is enumerated, with the Description property used to create a model-level validation error using the ModelState.AddModelError method.
-* Create a view file called Create.cshtml in the Views/Admin folder. 
+* Create a view file called Create.cshtml in the Views/Admin folder.
+* Validate Passwords.
+  * The Identity system checks the candidate password and generates errors if it doesn’t match the requirements.  
+  * Configure the password validation rules in the Startup class. Specify a minimum length of four characters and disable the other constraints. 
+* Implement a Custom Password Validator.
+  * The password validation functionality is defined by the IPasswordValidator<T> interface in the Microsoft.AspNetCore.Identity namespace, where T is the application-specific user class (AppUser in the example application). 
+  * Created the Infrastructure folder and add the CustomPasswordValidator class. The validator class checks to see that the password does not contain the username and that the password does not contain the sequence 12345.   
+  * In Startup.cs register the  CustomPasswordValidator class as the password validator for AppUser objects.
+  * Also implement a custom validation policy that builds on the foundation provided by the PasswordValidator built-in class that is used by default. Change the custom validator class so that it is derived from PasswordValidator. Now we have a combination of custom and built-in validation.
