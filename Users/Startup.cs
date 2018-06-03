@@ -23,11 +23,16 @@ namespace Users
             services.AddTransient<IPasswordValidator<AppUser>,
                 CustomPasswordValidator>();
 
+            services.AddTransient<IUserValidator<AppUser>,
+                CustomUserValidator>();
+
             //services.AddIdentity<AppUser, IdentityRole>()
             //    .AddEntityFrameworkStores<AppIdentityDbContext>()
             //    .AddDefaultTokenProviders();
 
             services.AddIdentity<AppUser, IdentityRole>(opts => {
+                opts.User.RequireUniqueEmail = true;
+                opts.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyz";
                 opts.Password.RequiredLength = 4;
                 opts.Password.RequireNonAlphanumeric = false;
                 opts.Password.RequireLowercase = false;

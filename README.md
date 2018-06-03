@@ -54,3 +54,11 @@ Freeman A. (2017) Pro ASP.NET Core MVC 2. Apress, Berkeley, CA
   * Created the Infrastructure folder and add the CustomPasswordValidator class. The validator class checks to see that the password does not contain the username and that the password does not contain the sequence 12345.   
   * In Startup.cs register the  CustomPasswordValidator class as the password validator for AppUser objects.
   * Also implement a custom validation policy that builds on the foundation provided by the PasswordValidator built-in class that is used by default. Change the custom validator class so that it is derived from PasswordValidator. Now we have a combination of custom and built-in validation.
+* Validate User Details.
+  * Built-in validation is also performed on usernames and e-mail addresses when accounts are created.
+  * Validation can be configured in the Startup class using the IdentityOptions.User property, which returns an instance of the UserOptions class.
+* Implement Custom User Validation.
+  * The validation functionality is specified by the IUserValidator<T> interface, which is defined in the Microsoft.AspNetCore.Identity namespace.
+  * In the Infrastructure folder add the CustomUserValidator class. This validator checks the domain of the e-mail address to make sure that it is part of the example.com domain.
+  * Register the custom user validator in the Startup.cs file. 
+  * The process for combining the built-in validation, which is provided by the UserValidator<T> class, with custom validation follows the same pattern as for validating passwords.
