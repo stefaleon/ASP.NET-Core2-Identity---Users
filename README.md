@@ -1,10 +1,14 @@
-## Getting Started with Identity
+## ASP.NET Core Identity
+
+- CHAPTER 28: Getting Started with Identity
+- CHAPTER 29: Applying ASP.NET Core Identity
 
 ### from [Pro ASP.NET Core MVC 2](https://www.apress.com/gp/book/9781484231494) by Adam Freeman
 
 Freeman A. (2017) Pro ASP.NET Core MVC 2. Apress, Berkeley, CA
 
-
+&nbsp;
+## CHAPTER 28: Getting Started with Identity
 
 &nbsp;
 ### Create a starter project
@@ -90,3 +94,30 @@ Freeman A. (2017) Pro ASP.NET Core MVC 2. Apress, Berkeley, CA
   * Create the Edit.cshtml file in the Views/Admin folder. This view displays the user ID, which cannot be changed, as static text and provides a form for editing the e-mail address and password.
 * The user class doesn’t contain password information, since only hashed values are stored in the database.
 * Comment out the user validation settings from the Startup class so that the default characters for usernames are used. Since some of the accounts in the database were created before the change in the validation setting, you won’t be able to edit them because the usernames won’t pass validation. And since validation is applied to the entire user object when the e-mail address is validated, the result is a user account that cannot be changed.
+
+
+
+
+&nbsp;
+## CHAPTER 29: Applying ASP.NET Core Identity
+
+
+&nbsp;
+### Authenticate Users
+
+* The key tool for restricting access to action methods is the Authorize attribute, which tells MVC that only requests from authenticated users should be processed. 
+* The ASP.NET Core platform provides information about the user through the HttpContext object, which is used by the Authorize attribute to check the status of the current request and see whether the user has been authenticated. The HttpContext.User property returns an implementation of the IPrincipal interface, which is defined in the System.Security.Principal namespace. 
+* The IPrincipal Interface defines among other the following members:
+  * Identity: Returns an implementation of the IIdentity interface that describes the user associated with the request.
+  * IsInRole(role): Returns true if the user is a member of the specified role.
+* The ASP.NET Core Identity middleware uses cookies sent by the browser to determine whether the user has been authenticated. If the user has been authenticated, then the IIdentity.IsAuthenticated property is set to true. 
+* If the IsAuthenticated property is false, it causes an authentication error that leads to the client being redirected to the /Account/Login URL, which is the default URL for providing authentication credentials.
+
+
+* Prepare to Implement Authentication.
+  * Apply the Authorize attribute to the Index action of the Home controller.
+  * Add the LoginModel class to the UserViewModels.cs file.
+  * Add the AccountController to the Controllers folder. Both versions of the Login action method take an argument called returnUrl. When a user requests a restricted URL, they are redirected to the /Account/Login URL with a query string that specifies the URL that the user should be sent back to once they have been authenticated. The value of the returnUrl query string parameter allows navigating between open and secured parts of the application smoothly.
+  * Apply the Authorize attribute to the AccountController class and then use the AllowAnonymous attribute on the individual Login action methods. This restricts action methods to authenticated users by default but allows unauthenticated users to log into the application. 
+  * Apply the ValidateAntiForgeryToken attribute, which works in conjunction with the form element tag helper to protect against cross-site request forgery.
+  * Create the Login view that will be rendered to gather credentials from the user in the Views/Account folder. It contains the hidden input element, which preserves the returnUrl argument. 
