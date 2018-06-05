@@ -130,3 +130,45 @@ Freeman A. (2017) Pro ASP.NET Core MVC 2. Apress, Berkeley, CA
   * The SignOutAsync method cancels any existing session that the user has, and the PasswordSignIn method performs the authentication. The arguments for the PasswordSignInAsync method are the user object, the password that the user has provided, a bool argument that controls whether the authentication cookie is persistent (disabled) and whether the account should be locked out if the password is correct (disabled).
   * The result of the PasswordSignInAsync method is a SignInResult object, which defines a bool Succeeded property that indicates if the authentication process has been successful. Check the Succeeded property and redirect the user to the returnUrl location if it is true or add a validation error and redisplay the Login view.
   * As part of the authentication process, Identity adds a cookie to the response, which the browser then includes in any subsequent request and which is used to identify the user’s session and the account that is associated with it. It is handled automatically by the Identity middleware.
+
+
+&nbsp;
+### Authorize Users with Roles
+
+* The Authorize attribute is currently used in its most basic form, which allows any authenticated user to execute the action method. It can also be used to refine authorization to give fine-grained control over which users can perform which actions, based on a user’s membership of a role.
+* A role is just an arbitrary label that you define to represent permission to perform a set of activities within an application. Almost every application differentiates between users who can perform administration functions and those who cannot. In the world of roles, this is done by creating an Administrators role and assigning users to it.
+* Users can belong to many roles, and the permissions associated with roles can be as coarse or as granular as you like, so you can use separate roles to differentiate between administrators who can perform basic tasks, such as creating new accounts, and those who can perform more sensitive operations, such as accessing payment data.
+* ASP.NET Core Identity takes responsibility for managing the set of roles defined in the application and keeping track of which users are members of each one. But it has no knowledge of what each role means; that information is contained within the MVC part of the application, where access to action methods is restricted based on role membership.
+* ASP.NET Core Identity provides a strongly typed base class for accessing and managing roles called `RoleManager<T>`, where T is the class that represents roles in the storage mechanism. Entity Framework Core
+uses a class called IdentityRole to represent roles. It defines the following properties:
+  * Id: Defines the unique identifier for the role
+  * Name: Defines the name of the role
+  * Users: Returns a collection of IdentityUserRole objects that represent the members of the role
+* ASP.NET Core Identity is already instructed to use IdentityRole to represent roles with the AddIdentity call in the ConfigureServices method of the Startup class. The AppUser class is used to represent users, and the built-in
+IdentityRole class is used for roles.
+
+* Create and Delete Roles
+  * Create an administration tool for managing roles. Create action methods that can create and delete roles. In the Controllers folder add the RoleAdminController controller.
+  * Roles are managed using the `RoleManager<T>` class, where T is the type being used to represent roles (the built-in IdentityRole class for this application). The RoleAdminController constructor declares a constructor dependency on RoleManager<IdentityRole>, which is resolved using dependency injection when the controller is created.
+  * The `RoleManager<T>` class defines the following methods and properties, which allow roles to be created and managed.
+    * CreateAsync(role): Creates a new role
+    * DeleteAsync(role): Deletes the specified role
+    * FindByIdAsync(id): Finds a role by its ID
+    * FindByNameAsync(name): Finds a role by its name
+    * RoleExistsAsync(name): Returns true if a role with the specified name exists
+    * UpdateAsync(role): Stores changes to the specified role
+    * Roles: Returns an enumeration of the roles that have been defined
+  * The new controller’s Index action method displays all the roles in the application.
+  * The Create action methods are used to display and receive a form, the data from which is used to create a new role using the CreateAsync method.
+  * The Delete action method receives a POST request and receives the unique ID of a role, which is used to remove it from the application using the DeleteAsync method, having located the object that represents it using the FindByIdAsync method.
+ 
+* Create the Views.   
+  * Add a using statement for Microsoft.AspNetCore.Identity to the _ViewImports.cshtml file.
+  * Create the Views/RoleAdmin folder and add the Index.cshtml file.
+  * This view uses a table to display details of the roles in the application. The third column uses the identity-role custom element attribute.
+  * Displaying a list of the users who are members of each role, requires too much code to be included in a view. Add a class file called RoleUsersTagHelper.cs to the Infrastructure folder and use it to define the RoleUsersTagHelper tag helper.
+  * This tag helper operates on td elements with an identity-role attribute, which is used to receive the name of the role that is being processed. The `RoleManager<IdentityRole>` and `UserManager<AppUser>` objects allow queries of the Identity database to build up a list of usernames in the role. 
+  * Add the tag helper t to the _ViewImports.cshtml file.
+  * Add the Create.cshtml view to the Views/RoleAdmin folder to support adding new roles.
+  * The only form data needed to create a role is the name. Use a string as the view model class in the Create.cshtml view.
+  * Validate that the user supplies a value when the form is submitted. In the Create POST method in RoleAdminController, apply the Required validation attribute directly to the parameter.
