@@ -185,3 +185,14 @@ IdentityRole class is used for roles.
     * RemoveFromRoleAsync(user, name): Removes the user as a member from the role with the specified name
   * An oddity of these methods is that the role-related methods operate on role names, even though roles also have unique identifiers. It is for this reason that my RoleModificationModel view model class has a RoleName property. 
   * Add the Edit.cshtml view to the Views/RoleAdmin folder. The view contains two tables: one for users who are not members of the selected role and one for those who are. Each user’s name is displayed along with a check box that allows the membership to be changed. The tables are contained in a form that is sent to the Edit action method and model bound to the RoleModificationModel class, providing easy access to the list of role membership changes to be made.
+
+* Use Roles for Authorization
+  * Now that the application has roles, they can be used as the basis for authorization through the Authorize attribute. Add a Logout method to the Account controller, which will make it possible to log out and log in again as a different user to see the effect of role membership.
+  * Add a link that targets the Logout method to the Index.cshtml file in the Views/Home folder.
+  * Update the Home controller to add a new action method and pass some information about the authenticated user to the view. 
+  * Use the Authorize attribute unchanged for the Index action method, but set the Roles property when applying the attribute to the OtherAction method, specifying that only members of the Users role should be able to access it. 
+  * Define a GetData method, which adds some basic information about the user identity, using the properties available through the HttpContext object.
+  * Start the application and navigate to the /Home/Index URL. Your browser will be redirected so that you can enter user credentials. The Authorize attribute applied to the Index action allows access to any authenticated user.
+  * However, if you now request the /Home/OtherAction URL, the logged user has to be a member of the Users role, in order to access the OtherAction method. If you log in as a  user who is not int the Users role, then your browser will be redirected to the /Account/AccessDenied URL, which is used when a user is unable to access an action method.
+  * Add an AccessDenied method to the Account controller so that there is an action to handle the latter request.
+  * Create the AccessDenied.cshtml view in the Views/Account folder. 
