@@ -196,3 +196,24 @@ IdentityRole class is used for roles.
   * However, if you now request the /Home/OtherAction URL, the logged user has to be a member of the Users role, in order to access the OtherAction method. If you log in as a  user who is not int the Users role, then your browser will be redirected to the /Account/AccessDenied URL, which is used when a user is unable to access an action method.
   * Add an AccessDenied method to the Account controller so that there is an action to handle the latter request.
   * Create the AccessDenied.cshtml view in the Views/Account folder. 
+
+
+&nbsp;
+### Seed the Database
+
+* One lingering problem in the project is that the access to my Admin and RoleAdmin controllers is not restricted. This is a classic chicken-and-egg problem because, in order to restrict access, I need to create users and roles, but the Admin and RoleAdmin controllers are the user management tools, and if I protect them with the Authorize attribute, there won’t be any credentials that will grant me access to them, especially when I first deploy the application. The solution to this problem is to seed the database with some initial data when the application starts.
+
+* Add some new configuration data to the appsettings.json file to specify the details for the account that will be created. The Data:AdminUser category provides the four values that I need to create an account and assign it to a
+role that will be able to use the administration tools.
+
+■ Caution: putting passwords in plain-text configuration files means that you must make it part of your deployment process to change the default account’s password when you deploy the application and initialize a new database for the first time.
+
+* Add the CreateAdminAccount static method to the AppIdentityDbContext class (you can also use a separate class).
+* The CreateAdminAccount method receives an IServiceProvider object, which it uses to obtain the UserManager and RoleManager objects, and an IConfiguration object, which it uses to get the data from the appsetting.json file.
+* The code in the CreateAdminAccount method checks to see whether the user already exists and, if not, creates it and assigns it to the specified role, which is also created if needed. 
+
+* Add a statement to the Startup class that calls the CreateAdminAccount method after the rest of the application has been set up and configured.
+* Disable the dependency injection scope validation feature in the Program class, because we are accessing a scoped service via the IApplicationBuilder.ApplicationServices provider.
+
+* Now that there is a reliable default account in the Identity database, use the Authorize attribute to
+protect the Admin and RoleAdmin controllers.
