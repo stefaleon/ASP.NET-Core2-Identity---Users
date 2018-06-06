@@ -172,3 +172,16 @@ IdentityRole class is used for roles.
   * Add the Create.cshtml view to the Views/RoleAdmin folder to support adding new roles.
   * The only form data needed to create a role is the name. Use a string as the view model class in the Create.cshtml view.
   * Validate that the user supplies a value when the form is submitted. In the Create POST method in RoleAdminController, apply the Required validation attribute directly to the parameter.
+
+* Manage Role Memberships.
+  * The next step is to be able to add and remove users from roles. This invokes taking the role data from the RoleManager class and associating it with the details of individual users.
+  * Define some view model classes that will represent the membership of a role and receive a new set of membership instructions from the user. Add the RoleEditModel and RoleModificationModel view models to the UserViewModels.cs file. The RoleEditModel class represents a role and details of the users in the system, categorized by whether they are members of the role. The RoleModificationModel class represents a set of changes to a role.
+  * Add the Edit GET and POST action methods in the RoleAdmin controller.
+  * Most of the code in the GET version of the Edit action method is responsible for generating the sets of members and nonmembers of the selected role. Once all the users have been categorized, a new instance of the RoleEditModel class is passed to the View method so that the data can be displayed using the default view.
+  * The POST version of the Edit method is responsible for adding and removing users to and from roles. The `UserManager<T>` class provides methods for working with roles.
+    * AddToRoleAsync(user, name): Adds the user ID to the role with the specified name
+    * GetRolesAsync(user): Returns a list of the names of the roles of which the user is a member
+    * IsInRoleAsync(user, name): Returns true if the user is a member of the role with the specified name
+    * RemoveFromRoleAsync(user, name): Removes the user as a member from the role with the specified name
+  * An oddity of these methods is that the role-related methods operate on role names, even though roles also have unique identifiers. It is for this reason that my RoleModificationModel view model class has a RoleName property. 
+  * Add the Edit.cshtml view to the Views/RoleAdmin folder. The view contains two tables: one for users who are not members of the selected role and one for those who are. Each user’s name is displayed along with a check box that allows the membership to be changed. The tables are contained in a form that is sent to the Edit action method and model bound to the RoleModificationModel class, providing easy access to the list of role membership changes to be made.
